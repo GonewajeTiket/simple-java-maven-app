@@ -1,43 +1,36 @@
 node {
-    properties([
-        pipelineTriggers([
-            cron('*/2 * * * *')
-        ])
-    ])
-
+    agent any
+    triggers {
+        pollSCM('*/2 * * * *')
+    }
+    
+    stage('Checkout') {
+        checkout([$class: 'GitSCM', 
+                  branches: [[name: '*/master']],
+                  userRemoteConfigs: [[url: 'https://github.com/GonewajeTiket/simple-java-maven-app']]])
+    }
+    
     stage('Build') {
-        agent {
-            docker {
-                image 'maven:3.9.0-eclipse-temurin-11'
-                args '-v /root/.m2:/root/.m2'
-            }
-        }
-        steps {
+        docker.image('maven:3.9.0-eclipse-temurin-11').inside('-v /root/.m2:/root/.m2') {
             sh 'mvn -B -DskipTests clean package'
         }
     }
 
     stage('Test') {
-        agent {
-            docker {
-                image 'maven:3.9.0-eclipse-temurin-11'
-                args '-v /root/.m2:/root/.m2'
-            }
-        }
-        steps {
-            sh 'mvn test'
-        }
-        post {
-            always {
+        docker.image('maven:3.9.0-eclipse-temurin-11').inside('-v /root/.m2:/root/.m2') {
+            try {
+                sh 'mvn test'
+            } finally {
                 junit 'target/surefire-reports/*.xml'
             }
         }
     }
 
     stage('Deliver') {
-        agent any
-        steps {
+        // Assuming deliver.sh script is in the same directory as the Jenkinsfile
+        docker.image('maven:3.9.0-eclipse-temurin-11').inside('-v /root/.m2:/root/.m2') {
             sh './jenkins/scripts/deliver.sh'
         }
+
     }
 }
