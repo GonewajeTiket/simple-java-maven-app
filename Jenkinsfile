@@ -1,7 +1,7 @@
 node {
     agent any
     triggers {
-        pollSCM('*/2 * * * *')
+        pollSCM('H/2 * * * *')
     }
     
     stage('Checkout') {
