@@ -1,8 +1,4 @@
 node {
-    agent any
-    triggers {
-        pollSCM('H/2 * * * *')
-    }
     
     stage('Checkout') {
         checkout([$class: 'GitSCM', 
