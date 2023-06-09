@@ -24,3 +24,7 @@ echo 'The following command runs and outputs the execution of your Java'
 echo 'application (which Jenkins built using Maven) to the Jenkins UI.'
 set -x
 java -jar target/${NAME}-${VERSION}.jar
+
+#optional command to run maven app under systemd
+sed -i "s|ExecStart=/usr/bin/java -jar /home/ec2-user/target/NAME-VERSION.jar|ExecStart=/usr/bin/java -jar /home/ec2-user/target/$NAME-$VERSION.jar|" simple-java-maven-app.service
+

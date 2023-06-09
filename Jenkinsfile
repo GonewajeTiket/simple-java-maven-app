@@ -28,9 +28,9 @@ node {
         
         // Assuming deliver.sh script is in the same directory as the Jenkinsfile
         docker.image('maven:3.9.0-eclipse-temurin-11').inside('-v /root/.m2:/root/.m2') {
-            sh './jenkins/scripts/deliver.sh'
             input message: 'Lanjutkan ke tahap Deploy?'
-            sh './jenkins/scripts/kill.sh'
+            sh './jenkins/scripts/deliver.sh'
+            sleep(time: 60)
         }
     }
 }
