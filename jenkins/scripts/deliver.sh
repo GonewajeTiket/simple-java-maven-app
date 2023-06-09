@@ -26,5 +26,5 @@ set -x
 java -jar target/${NAME}-${VERSION}.jar
 
 #optional command to run maven app under systemd
-sed -i "s|ExecStart=/usr/bin/java -jar /home/ec2-user/target/NAME-VERSION.jar|ExecStart=/usr/bin/java -jar /home/ec2-user/target/$NAME-$VERSION.jar|" /etc/systemd/system/simple-java-maven-app.service
+sudo sed -i "s|ExecStart=/usr/bin/java -jar /home/ec2-user/target/NAME-VERSION.jar|ExecStart=/usr/bin/java -jar /home/ec2-user/target/$NAME-$VERSION.jar|" /etc/systemd/system/simple-java-maven-app.service
 
